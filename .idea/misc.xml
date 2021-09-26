@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/lucas/AndroidStudioProjects/Application/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/lucas/AndroidStudioProjects/Application/app/src/main/res/layout/launcher_icon.xml" value="0.1" />
         <entry key="..\:/Users/lucas/AndroidStudioProjects/Application/app/src/release/res/drawable/launcher_icon.xml" value="0.1" />
         <entry key="..\:/Users/lucas/AndroidStudioProjects/Application/app/src/release/res/layout/activity_main.xml" value="0.1" />
       </map>

@@ -1,4 +1,10 @@
 <resources>
-    <string name="app_name">Application</string>
-    <string name="title_activity_maps">MapsActivity</string>
+
+    <string name="acess_token"
+        translatable="false">
+       sk.eyJ1IjoibHVjYXNjcmVzcG83NSIsImEiOiJja3R4bGk3bnIxNGp6MnVxbWZ5d3hrMDlzIn0._CGG-HrGjRbOaM5-NtwAMA </string>
+
 </resources>
+
+
+

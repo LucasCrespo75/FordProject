@@ -1,41 +1,34 @@
-package com.example.application;
-package com.mapbox.mapboxandroiddemo.examples.styles;
-
-import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
-import com.mapbox.geojson.Feature;
-import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.geojson.Point;
-import com.mapbox.mapboxandroiddemo.R;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
-import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.style.layers.CircleLayer;
+import com.mapbox.mapboxsdk.style.sources.VectorSource;
 
-import java.util.ArrayList;
-import java.util.List;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
-
-
+import static com.mapbox.mapboxsdk.style.expressions.Expression.exponential;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.stop;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleColor;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleOpacity;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleRadius;
 
 /**
  * Display
  */
-public class MainActivity extends AppCompatActivity implements
-        OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity{ //implements
+      //  OnMapReadyCallback {
 
-    private static final String SOURCE_ID = "SOURCE_ID";
-    private static final String ICON_ID = "ICON_ID";
-    private static final String LAYER_ID = "LAYER_ID";
+   // private static final String SOURCE_ID = "SOURCE_ID";
+   // private static final String ICON_ID = "ICON_ID";
+   // private static final String LAYER_ID = "LAYER_ID";
     private MapView mapView;
 
     @Override
@@ -50,12 +43,40 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this){
-
-        }
+        mapView.getMapAsync(new OnMapReadyCallback(){
 
         @Override
-        public void onMapReady(new OnMapReadyCallback() {
+        public void onMapReady(@NonNull final MapboxMap mapboxMap) {
+
+            mapboxMap.setStyle(StyleDARK, new Style.OnStyleLoaded() {
+
+                @Override
+                public void onStyleLoaded(@NonNull Style style) {
+
+                    VectorSource vectorSource = new VectorSource(
+                            "trees-source", "http://api.mapbox.com/v4/lucascrespo75.8igw8kt2.json?acess_token="
+                            + getString(R.string.mapbox_acess_token)
+                    );
+                    style.addSource(vectorSource);
+                    CircleLayer circleLayer = new CircleLayer("trees-style", "trees-source");
+
+                    circleLayer.setSourceLayer("street-trees-DC-9gvg5l");
+                    circleLayer.withPropreties(
+                            circleOpacity(0.6f),
+                            circleColor(Color.parseColor("#070808")),
+                            circleRadius(
+                                    interpolate(exponential(1.0f), get("DBH"),
+                                            stop(0, 0f),
+                                            stop(1, 1f),
+                                            stop(110, 11f)
+                                    )
+                            )
+                    );
+                    style.addLayer(circleLayer);
+                  }
+               });
+            });
+          }
 
             //Criando a lista de simbolos apartir da <Feature>, coloquei o Symboll, para que eles seguissem o caminho indicado a baixo
 //sendo esse motivo, de ter colocado o simbolLayerFeatureList, com as coordenadas, para elas ficarem estaticas no local da coordenada indicada
@@ -101,29 +122,27 @@ public class MainActivity extends AppCompatActivity implements
                 }
             });
         }
+        @Override
+        protected void onStart() {
+        super.onStart();
+        mapView.onStart();
+        }
 
         @Override
         public void onResume() {
             super.onResume();
             mapView.onResume();
         }
-
         @Override
-        protected void onStart() {
-            super.onStart();
-            mapView.onStart();
+        public void onPause() {
+        super.onPause();
+        mapView.onPause();
         }
 
         @Override
         protected void onStop() {
             super.onStop();
             mapView.onStop();
-        }
-
-        @Override
-        public void onPause() {
-            super.onPause();
-            mapView.onPause();
         }
 
         @Override
